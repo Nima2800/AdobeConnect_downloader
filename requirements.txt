@@ -1,0 +1,7 @@
+Flask>=3.0
+requests>=2.31
+Pillow>=10.0
+PyMuPDF>=1.23
+numpy>=1.24
+arabic-reshaper>=3.0
+python-bidi>=0.4.2

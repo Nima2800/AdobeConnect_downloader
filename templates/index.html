@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#ffffff">
+  <title>باتیما کلاس دانلودر</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v=kalameh-font-fix-1">
+</head>
+<body data-step="stepLink">
+  <main class="shell home-shell">
+    <form id="renderForm" class="grid-form" enctype="multipart/form-data">
+      <section id="stepLink" class="card field-card wide wizard-step landing-card" data-step="1">
+        <div class="minimal-title center-title">
+          <span class="tiny-badge">Batima</span>
+          <h1>باتیما کلاس دانلودر</h1>
+          <p>لینک کلاس را وارد کن تا لینک دانلود ZIP ساخته شود.</p>
+        </div>
+
+        <div class="url-form-row">
+          <input id="classUrl" name="class_url" class="input hero-input" type="url" placeholder="https://..." autocomplete="off">
+          <button type="button" id="continueToDownload" class="btn primary hero-btn">
+            ساخت لینک دانلود
+            <span>←</span>
+          </button>
+        </div>
+        <div id="activeJobNotice" class="result-box tab-advice hidden"></div>
+      </section>
+
+      <section id="stepDownload" class="card field-card wide wizard-step hidden" data-step="2">
+        <div class="section-title compact-only">
+          <span class="step-dot">2</span>
+          <div>
+            <h2>لینک دانلود کلاس</h2>
+            <p>لینک ZIP آماده شد.</p>
+          </div>
+        </div>
+        <div class="download-warning-board" role="alert" aria-live="polite">
+          <strong>راهنمای مهم دانلود</strong>
+          <p>ابتدا لینک کلاس خود را که حاوی سشن است باز کنید، منتظر بمانید وارد کلاس شوید و سپس داخل همان مرورگر لینک دانلود را پیست کنید تا فایل دانلود شود.</p>
+        </div>
+        <div id="downloadLinkBox" class="download-link-card result-box"></div>
+        <div class="flow-actions">
+          <button type="button" id="backToLink" class="btn secondary">ویرایش لینک</button>
+          <button type="button" id="continueToUpload" class="btn primary">ادامه</button>
+        </div>
+      </section>
+
+      <section id="stepUpload" class="card field-card wide wizard-step hidden" data-step="3">
+        <div class="section-title compact-only">
+          <span class="step-dot">3</span>
+          <div>
+            <h2>آپلود فایل ZIP</h2>
+            <p>فایل دانلود شده را انتخاب کن.</p>
+          </div>
+        </div>
+
+        <label class="drop-zone" for="zipFile">
+          <input id="zipFile" name="zip_file" type="file" accept=".zip,application/zip">
+          <span class="upload-icon">+</span>
+          <strong id="zipLabel">انتخاب فایل ZIP</strong>
+          <small>Drag & Drop هم پشتیبانی می شود</small>
+        </label>
+
+        <input type="hidden" id="uploadId" name="upload_id" value="">
+        <div class="flow-actions wrap-actions">
+          <button type="button" id="makeZipLink" class="btn secondary">آپلود ZIP</button>
+          <button type="button" id="smartAnalyzeBtn" class="btn secondary">تحلیل سریع</button>
+          <button type="button" id="continueToSettings" class="btn primary">ادامه</button>
+        </div>
+        <div id="zipLinkBox" class="result-box hidden"></div>
+        <div id="analysisBox" class="result-box hidden"></div>
+      </section>
+
+      <section id="stepSettings" class="card field-card wide wizard-step hidden" data-step="4">
+        <div class="section-title compact-only">
+          <span class="step-dot">4</span>
+          <div>
+            <h2>تنظیمات خروجی</h2>
+            <p>پیش فرض 480p است؛ برای بیشتر سیستم ها مناسب تر است.</p>
+          </div>
+        </div>
+
+        <div class="quality-list">
+          {% for key, q in qualities.items() %}
+          <label class="quality-option {% if key == default_quality %}selected{% endif %}" data-quality="{{ key }}">
+            <input type="radio" name="quality" value="{{ key }}" {% if key == default_quality %}checked{% endif %}>
+            <span>
+              <strong>{{ q.label }}</strong>
+              <small>{{ q.description }}</small>
+              <em>{{ q.size }} · scene {{ q.fps }}fps · screen {{ q.screen_fps }}fps</em>
+            </span>
+          </label>
+          {% endfor %}
+        </div>
+
+        <div class="settings-divider"></div>
+
+        <div class="section-title compact-title">
+          <span class="step-dot mini">+</span>
+          <div>
+            <h2>المان های داخل ویدیو</h2>
+            <p>هر بخشی که لازم داری در خروجی بماند.</p>
+          </div>
+        </div>
+
+        <div class="toolbar-line">
+          <button type="button" id="selectAllElements" class="chip-btn active">همه</button>
+          <button type="button" id="clearElements" class="chip-btn">پاک کردن</button>
+        </div>
+
+        <div class="element-grid">
+          {% for key, label in elements.items() %}
+          <label class="toggle-card checked">
+            <input type="checkbox" name="elements" value="{{ key }}" checked>
+            <span class="toggle-mark"></span>
+            <span>{{ label }}</span>
+          </label>
+          {% endfor %}
+        </div>
+
+        <div class="settings-divider"></div>
+
+        <label class="toggle-card gpu-card clean-gpu-card">
+          <input id="gpu1050" type="checkbox" name="gpu_1050" value="1">
+          <span class="toggle-mark"></span>
+          <span>
+            استفاده از GPU NVIDIA
+            <small>فقط اگر کارت گرافیک NVIDIA GTX 1050 یا بالاتر داری فعال کن.</small>
+          </span>
+        </label>
+
+        <div class="flow-actions">
+          <button type="button" id="backToUpload" class="btn secondary">بازگشت</button>
+          <button id="startBtn" class="btn primary" type="submit">
+            شروع رندر
+            <span>←</span>
+          </button>
+        </div>
+      </section>
+    </form>
+
+    <section class="history-shell">
+      <button id="toggleHistory" class="history-toggle" type="button" aria-expanded="false">پردازش های قبلی</button>
+      <div id="historyPanel" class="card history-card hidden">
+        <div class="logs-head">
+          <div>
+            <p class="eyebrow">History</p>
+            <h2>پردازش های قبلی</h2>
+          </div>
+          <button id="refreshHistory" class="chip-btn" type="button">Refresh</button>
+        </div>
+        <div id="historyList" class="history-list empty-state">هنوز job ذخیره شده ای نیست.</div>
+      </div>
+    </section>
+  </main>
+
+  <div id="toast" class="toast hidden"></div>
+  <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>

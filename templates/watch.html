@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#ffffff">
+  <title>پلیر کلاس</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v=kalameh-font-fix-1">
+</head>
+<body data-job-id="{{ job_id }}" class="watch-body">
+  <div class="bg-orb orb-1"></div>
+  <div class="bg-orb orb-3"></div>
+
+  <main class="shell watch-shell">
+    <section class="card glass player-header">
+      <div>
+        <a href="/" class="back-link">← ساخت ویدیوی جدید</a>
+        <p class="eyebrow">Class Player · Resume-ready</p>
+        <h1>پلیر و مرکز کنترل خروجی کلاس</h1>
+        <p id="statusText" class="lead">پردازش شروع شده است…</p>
+        <div id="stagePills" class="stage-pills"></div>
+      </div>
+      <div class="progress-ring">
+        <strong id="progressNumber">0%</strong>
+        <span>پیشرفت</span>
+      </div>
+    </section>
+
+    <section class="card video-card">
+      <div id="videoSkeleton" class="video-skeleton">
+        <div class="loader"></div>
+        <h2>ویدیو در حال ساخته شدن است</h2>
+        <p>segment اول شامل ۱۰ دقیقه اول کلاس است و همین‌جا قابل پخش خواهد بود.</p>
+      </div>
+
+      <div id="livePreviewWrap" class="live-preview-wrap hidden">
+        <img id="livePreview" class="class-video live-preview" alt="پیش‌نمایش زنده رندر">
+        <div class="preview-note">
+          <strong>پیش‌نمایش زنده رندر</strong>
+          <span id="previewTime">در حال آماده‌سازی تصویر…</span>
+        </div>
+      </div>
+
+      <video id="classVideo" class="class-video hidden" controls preload="metadata"></video>
+
+      <div id="segmentPanel" class="segment-panel hidden">
+        <div class="segment-head">
+          <div>
+            <strong>بخش‌های آماده‌شده</strong>
+            <p id="segmentStatus">بخش اول ۱۰ دقیقه اول کلاس است.</p>
+          </div>
+          <button id="playFinalBtn" class="btn secondary hidden" type="button">پخش فیلم کامل</button>
+        </div>
+        <div id="segmentList" class="segment-list"></div>
+      </div>
+
+      <div class="speed-panel">
+        <span>سرعت پخش:</span>
+        <button data-speed="1" class="speed-btn active">1×</button>
+        <button data-speed="1.5" class="speed-btn">1.5×</button>
+        <button data-speed="2" class="speed-btn">2×</button>
+        <button data-speed="3" class="speed-btn">3×</button>
+        <button data-speed="4" class="speed-btn">4×</button>
+      </div>
+    </section>
+
+    <section class="card status-card">
+      <div class="bar-wrap"><div id="progressBar" class="bar"></div></div>
+      <div class="progress-details">
+        <span id="stageText">Stage: queued</span>
+        <span id="segmentText">Segments: 0</span>
+        <span id="timeText">Elapsed: 00:00 · ETA: --</span>
+      </div>
+      <div class="action-row wrap-actions">
+        <a id="downloadBtn" class="btn secondary hidden" href="#">دانلود MP4</a>
+        <a id="mp3Btn" class="btn secondary hidden" href="#">دانلود MP3</a>
+        <a id="packageBtn" class="btn primary hidden" href="#">دانلود پکیج کامل کلاس</a>
+        <button id="pauseBtn" class="chip-btn" type="button">Pause</button>
+        <button id="resumeBtn" class="chip-btn" type="button">Resume</button>
+        <button id="cancelBtn" class="chip-btn danger" type="button">Cancel</button>
+        <button id="cleanupBtn" class="chip-btn" type="button">Cleanup temp</button>
+        <span id="metaText" class="muted"></span>
+      </div>
+    </section>
+
+    <section class="card compact-tools-card">
+      <div class="compact-tools">
+        <button class="compact-tool-btn" type="button" data-panel="searchPanel" aria-expanded="false">
+          🔎 جستجو داخل کلاس
+        </button>
+        <button class="compact-tool-btn" type="button" data-panel="chaptersPanel" aria-expanded="false">
+          ☰ فصل‌بندی خودکار
+        </button>
+      </div>
+
+      <div id="searchPanel" class="compact-panel hidden">
+        <div class="search-row">
+          <input id="recordingSearch" class="input" type="search" placeholder="جستجو در chat، نام فایل‌ها، فصل‌ها…">
+          <button id="searchBtn" class="btn secondary" type="button">Search</button>
+        </div>
+        <div id="searchResults" class="search-results empty-state">بعد از آماده شدن metadata، نتایج اینجا نمایش داده می‌شود.</div>
+      </div>
+
+      <div id="chaptersPanel" class="compact-panel hidden">
+        <div id="chapterList" class="chapter-list empty-state">هنوز chapter آماده نیست.</div>
+      </div>
+    </section>
+
+    <section class="card logs-card">
+      <div class="logs-head">
+        <h2>لاگ ساخت</h2>
+        <button id="toggleLogs" class="chip-btn">نمایش / پنهان</button>
+      </div>
+      <pre id="logsBox" class="logs"></pre>
+    </section>
+  </main>
+
+  <script src="{{ url_for('static', filename='watch.js') }}"></script>
+</body>
+</html>
